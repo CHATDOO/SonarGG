@@ -38,7 +38,7 @@
 
   <ItemGroup>
     <Reference Include="SonarAPOSettingsControl">
-      <HintPath>C:\Program Files\SteelSeries\GG\apps\sonar\Interop.SonarAPOSettingsControl.dll</HintPath>
+      <HintPath>lib\Interop.SonarAPOSettingsControl.dll</HintPath>
       <EmbedInteropTypes>false</EmbedInteropTypes>
     </Reference>
   </ItemGroup>

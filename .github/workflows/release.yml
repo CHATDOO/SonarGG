@@ -21,7 +21,7 @@ jobs:
           dotnet-version: '8.0.x'
 
       - name: Restore Dependencies
-        run: dotnet restore SonarGG.csproj
+        run: dotnet restore SonarGG.csproj -r win-x64
 
       - name: Build SonarGG in Release Mode
         run: dotnet publish SonarGG.csproj -c Release -r win-x64 --self-contained false -p:PublishSingleFile=true -o publish
