@@ -97,12 +97,6 @@ public class ApoController : IDisposable
             }
 
             IsInitialized = _channelStores.Count > 0;
-            if (IsInitialized)
-            {
-                // Désactivation forcée et définitive de toute l'IA ClearCast / DirectML
-                SetClearCastAi(false, 0f);
-                SetImpactNoise(false, 0f);
-            }
             return IsInitialized;
         }
         catch (Exception ex)

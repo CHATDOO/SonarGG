@@ -154,9 +154,21 @@ public static class PresetManager
                 apo.SetVirtualSurround(channel, enabled, reverb);
             }
 
-            // ClearCast AI & Impact Noise : Verrouillés à désactivé (Pure DSP / VST - Zéro IA)
-            apo.SetClearCastAi(false, 0f);
-            apo.SetImpactNoise(false, 0f);
+            // ClearCast AI (Mic)
+            if (root.TryGetProperty("noiseCancelingState", out var nc))
+            {
+                bool enabled = nc.TryGetProperty("enabled", out var en) && en.GetBoolean();
+                float val = nc.TryGetProperty("value", out var v) ? (float)v.GetDouble() : 0.65f;
+                apo.SetClearCastAi(enabled, val);
+            }
+
+            // Impact Noise
+            if (root.TryGetProperty("impactNoiseReductionState", out var inr))
+            {
+                bool enabled = inr.TryGetProperty("enabled", out var en) && en.GetBoolean();
+                float val = inr.TryGetProperty("value", out var v) ? (float)v.GetDouble() : 0.0f;
+                apo.SetImpactNoise(enabled, val);
+            }
 
             // Noise Gate
             if (root.TryGetProperty("noiseGateState", out var ng))

@@ -829,15 +829,25 @@ public partial class MainWindow : Window
             MiniSliderChatMix.Value = chatMix;
             UpdateChatMixLabels(chatMix);
 
-            // Désactivation forcée de l'IA ClearCast & Impact Noise (Zero AI, 100% DSP/VST)
-            _apo.SetClearCastAi(false, 0f);
-            _apo.SetImpactNoise(false, 0f);
+            // ClearCast AI
+            _apo.GetClearCastAi(out bool aiOn, out float aiMix);
+            if (ChkClearCastAi != null)
+                ChkClearCastAi.IsChecked = aiOn;
+            if (SliderClearCastAi != null)
+            {
+                SliderClearCastAi.Value = aiMix > 0.001f ? aiMix : 0.65f;
+                if (TxtClearCastAiVal != null)
+                    TxtClearCastAiVal.Text = $"{(int)(SliderClearCastAi.Value * 100)}%";
+            }
 
-            // Porte Anti-Bruit & Compresseur Hardware
+            // Porte Anti-Bruit (Noise Gate)
             _apo.GetNoiseGate(out bool ngOn, out float ngThresh);
-            SliderNoiseGate.Value = ngThresh;
-            if (TxtNoiseGateVal != null)
-                TxtNoiseGateVal.Text = $"{(int)ngThresh} dB";
+            if (ChkNoiseGate != null)
+                ChkNoiseGate.IsChecked = ngOn;
+            if (SliderNoiseGate != null)
+                SliderNoiseGate.Value = ngThresh < -59f ? -45.7 : ngThresh;
+            if (TxtNoiseGateVal != null && SliderNoiseGate != null)
+                TxtNoiseGateVal.Text = $"{SliderNoiseGate.Value:0.0} dB";
 
             _apo.GetCaptureCompressor(out bool compOn, out float compThresh);
             if (ChkCompressor != null)
@@ -1191,17 +1201,57 @@ public partial class MainWindow : Window
     }
 
     // =====================================================================
-    // Tab 4: Studio Micro & VST (Zero AI)
+    // Tab 4: Studio Micro & VST
     // =====================================================================
+    private void ChkClearCastAi_Checked(object sender, RoutedEventArgs e)
+    {
+        if (!IsLoaded || _isSyncingUi) return;
+        _apo.SetClearCastAi(true, (float)SliderClearCastAi.Value);
+    }
+
+    private void ChkClearCastAi_Unchecked(object sender, RoutedEventArgs e)
+    {
+        if (!IsLoaded || _isSyncingUi) return;
+        _apo.SetClearCastAi(false, 0f);
+    }
+
+    private void SliderClearCastAi_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+    {
+        if (TxtClearCastAiVal != null)
+            TxtClearCastAiVal.Text = $"{(int)(e.NewValue * 100)}%";
+        if (!IsLoaded || _isSyncingUi) return;
+        if (ChkClearCastAi != null && ChkClearCastAi.IsChecked == true)
+        {
+            _apo.SetClearCastAi(true, (float)e.NewValue);
+        }
+    }
+
+    private void ChkNoiseGate_Checked(object sender, RoutedEventArgs e)
+    {
+        if (!IsLoaded || _isSyncingUi) return;
+        _apo.SetNoiseGate(true, (float)SliderNoiseGate.Value);
+        _micEngine.IsNoiseGateEnabled = true;
+    }
+
+    private void ChkNoiseGate_Unchecked(object sender, RoutedEventArgs e)
+    {
+        if (!IsLoaded || _isSyncingUi) return;
+        _apo.SetNoiseGate(false, -60f);
+        _micEngine.IsNoiseGateEnabled = false;
+    }
+
     private void SliderNoiseGate_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
     {
         if (TxtNoiseGateVal != null)
-            TxtNoiseGateVal.Text = $"{(int)e.NewValue} dB";
+            TxtNoiseGateVal.Text = $"{e.NewValue:0.0} dB";
         _micEngine.NoiseGateThresholdDb = (float)e.NewValue;
         if (TxtGateStatus != null)
             TxtGateStatus.Text = e.NewValue > -40 ? "🔴 SEUIL ÉLEVÉ (Voix forte requise)" : "🟢 SEUIL NORMAL (Voix sensible)";
         if (!IsLoaded || _isSyncingUi) return;
-        _apo.SetNoiseGate(true, (float)e.NewValue);
+        if (ChkNoiseGate == null || ChkNoiseGate.IsChecked == true)
+        {
+            _apo.SetNoiseGate(true, (float)e.NewValue);
+        }
     }
 
     private void ChkCompressor_Checked(object sender, RoutedEventArgs e)
@@ -1268,6 +1318,52 @@ public partial class MainWindow : Window
         {
             _vstHost.AddPlugin(dlg.FileName);
         }
+    }
+
+    private void BtnPresetUserMix_Click(object sender, RoutedEventArgs e)
+    {
+        ChkClearCastAi.IsChecked = true;
+        SliderClearCastAi.Value = 0.65;
+        if (TxtClearCastAiVal != null)
+            TxtClearCastAiVal.Text = "65%";
+
+        ChkNoiseGate.IsChecked = true;
+        SliderNoiseGate.Value = -45.7;
+        if (TxtNoiseGateVal != null)
+            TxtNoiseGateVal.Text = "-45.7 dB";
+
+        ChkCompressor.IsChecked = false;
+        SliderCompressor.Value = 0;
+        if (TxtCompressorVal != null)
+            TxtCompressorVal.Text = "0.0 dB (Seuil)";
+
+        ChkHighPass.IsChecked = true;
+
+        _apo.SetClearCastAi(true, 0.65f);
+        _apo.SetNoiseGate(true, -45.7f);
+        _apo.SetCaptureCompressor(false, 0f);
+
+        // Si NVIDIA Broadcast est disponible, le sélectionner en entrée
+        if (ComboInputDevice != null)
+        {
+            for (int i = 0; i < ComboInputDevice.Items.Count; i++)
+            {
+                if (ComboInputDevice.Items[i] is ComboBoxItem item &&
+                    item.Content.ToString()!.Contains("Broadcast", StringComparison.OrdinalIgnoreCase))
+                {
+                    ComboInputDevice.SelectedIndex = i;
+                    break;
+                }
+            }
+        }
+
+        MessageBox.Show("⭐ Configuration 'NVIDIA Broadcast + Sonar' appliquée avec succès !\n\n" +
+            "• ClearCast AI : ACTIF (65%)\n" +
+            "• Noise Gate : ACTIF (-45.7 dB)\n" +
+            "• Compresseur : DÉSACTIVÉ\n" +
+            "• Coupe-bas 80Hz : ACTIF\n" +
+            "• Micro d'entrée : NVIDIA Broadcast",
+            "Configuration Microphone Appliquée", MessageBoxButton.OK, MessageBoxImage.Information);
     }
 
     private void BtnPresetBroadcast_Click(object sender, RoutedEventArgs e)
