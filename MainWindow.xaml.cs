@@ -126,7 +126,7 @@ public partial class MainWindow : Window
             {
                 MessageBox.Show(
                     "Impossible d'initialiser le pilote Sonar APO direct.\n\n" +
-                    "Vérifiez que le pilote virtuel SteelSeries Sonar est bien installé sur ce système.",
+                    "Vérifiez que le pilote audio virtuel est bien installé sur ce système.",
                     "Attention - Pilote SonarGG",
                     MessageBoxButton.OK,
                     MessageBoxImage.Warning);
@@ -356,7 +356,7 @@ public partial class MainWindow : Window
                 SliderChatMix.Value = 0;
                 MiniSliderChatMix.Value = 0;
             });
-            menu.Items.Add("🗑️ Fermer les processus GG", null, (s, e) => ApoController.KillGGProcesses());
+            menu.Items.Add("🧹 Nettoyer les processus d'arrière-plan", null, (s, e) => ApoController.KillGGProcesses());
             menu.Items.Add(new System.Windows.Forms.ToolStripSeparator());
             menu.Items.Add("❌ Quitter SonarGG", null, (s, e) =>
             {
@@ -888,9 +888,9 @@ public partial class MainWindow : Window
     {
         int killed = ApoController.KillGGProcesses();
         MessageBox.Show(
-            $"{killed} processus d'arrière-plan SteelSeries ont été fermés.\n\n" +
+            $"{killed} processus d'arrière-plan ont été fermés.\n\n" +
             "SonarGG continue de gérer l'audio DSP matériel et le pilote virtuel en toute autonomie !",
-            "Purge des processus — SonarGG",
+            "Nettoyage des processus — SonarGG",
             MessageBoxButton.OK,
             MessageBoxImage.Information);
     }
@@ -1357,12 +1357,12 @@ public partial class MainWindow : Window
             }
         }
 
-        MessageBox.Show("⭐ Configuration 'NVIDIA Broadcast + Sonar' appliquée avec succès !\n\n" +
-            "• ClearCast AI : ACTIF (65%)\n" +
+        MessageBox.Show("⭐ Profil 'Studio Pro' appliqué avec succès !\n\n" +
+            "• Réduction de bruit IA : ACTIVE (65%)\n" +
             "• Noise Gate : ACTIF (-45.7 dB)\n" +
             "• Compresseur : DÉSACTIVÉ\n" +
             "• Coupe-bas 80Hz : ACTIF\n" +
-            "• Micro d'entrée : NVIDIA Broadcast",
+            "• Limiteur : ACTIF",
             "Configuration Microphone Appliquée", MessageBoxButton.OK, MessageBoxImage.Information);
     }
 
@@ -1375,7 +1375,7 @@ public partial class MainWindow : Window
         _apo.SetNoiseGate(true, -44f);
         _apo.SetCaptureCompressor(true, -18f);
         _apo.SetCaptureHighPass(1.0f);
-        MessageBox.Show("Profil '🎙️ Broadcast Pro' activé :\nPorte -44dB, Compresseur -18dB, Coupe-bas 80Hz.", "Profil Vocal", MessageBoxButton.OK, MessageBoxImage.Information);
+        MessageBox.Show("Profil '🎙️ Voix Dynamique' activé :\nPorte -44dB, Compresseur -18dB, Coupe-bas 80Hz.", "Profil Vocal", MessageBoxButton.OK, MessageBoxImage.Information);
     }
 
     private void BtnPresetDiscord_Click(object sender, RoutedEventArgs e)

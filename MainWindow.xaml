@@ -950,9 +950,9 @@
                         <ScrollViewer VerticalScrollBarVisibility="Auto">
                             <StackPanel Margin="0,10,0,20" MaxWidth="800" HorizontalAlignment="Center">
                                 <TextBlock Text="🎙️ Chaine Vocale Studio &amp; Rack de Plugins VST3" FontSize="16" FontWeight="Bold" Foreground="#E2E8F0" Margin="0,0,0,4"/>
-                                <TextBlock Text="Traitement DSP Hardware haute fidélité (0.1 ms) · Zero IA lourde · Hébergement de plugins VST3 pour microphone." Foreground="#94A3B8" Margin="0,0,0,16"/>
+                                <TextBlock Text="Traitement DSP Hardware haute fidélité (0.1 ms) · Réduction de bruit IA · Hébergement de plugins VST3 pour microphone." Foreground="#94A3B8" Margin="0,0,0,16"/>
 
-                                <!-- 1. CLEARCAST AI NOISE CANCELLATION CARD -->
+                                <!-- 1. AI NOISE REDUCTION CARD -->
                                 <Border Background="#141824" BorderBrush="#212839" BorderThickness="1" CornerRadius="14" Padding="20" Margin="0,0,0,14" Effect="{StaticResource CardShadow}">
                                     <StackPanel>
                                         <Grid Margin="0,0,0,14">
@@ -961,8 +961,8 @@
                                                 <ColumnDefinition Width="Auto"/>
                                             </Grid.ColumnDefinitions>
                                             <StackPanel VerticalAlignment="Center">
-                                                <TextBlock Text="🌊 CLEARCAST AI NOISE CANCELLATION" FontWeight="Bold" Foreground="#FFFFFF" FontSize="14"/>
-                                                <TextBlock Text="Annulation de bruit par intelligence artificielle avec ajustement du mélange." FontSize="11" Foreground="#64748B"/>
+                                                <TextBlock Text="🌊 RÉDUCTION DU BRUIT PAR IA (AI NOISE REDUCTION)" FontWeight="Bold" Foreground="#FFFFFF" FontSize="14"/>
+                                                <TextBlock Text="Filtrage neuronal adaptatif des bruits parasites avec ajustement du mélange." FontSize="11" Foreground="#64748B"/>
                                             </StackPanel>
                                             <CheckBox x:Name="ChkClearCastAi" Grid.Column="1" VerticalAlignment="Center" IsChecked="True" Checked="ChkClearCastAi_Checked" Unchecked="ChkClearCastAi_Unchecked"/>
                                         </Grid>
@@ -1077,8 +1077,8 @@
                                         <!-- Quick Presets -->
                                         <StackPanel Orientation="Horizontal" Margin="0,0,0,14">
                                             <TextBlock Text="Profils Rapides :" FontWeight="Bold" Foreground="#94A3B8" VerticalAlignment="Center" Margin="0,0,10,0"/>
-                                            <Button Content="⭐ Mon Mix (Broadcast + GG)" Style="{StaticResource ActionButton}" Margin="0,0,6,0" Padding="10,5" Click="BtnPresetUserMix_Click" Background="#4338CA" BorderBrush="#6366F1"/>
-                                            <Button Content="🎙️ Broadcast Pro" Style="{StaticResource ActionButton}" Margin="0,0,6,0" Padding="8,4" Click="BtnPresetBroadcast_Click"/>
+                                            <Button Content="⭐ Profil Studio Pro" Style="{StaticResource ActionButton}" Margin="0,0,6,0" Padding="10,5" Click="BtnPresetUserMix_Click" Background="#4338CA" BorderBrush="#6366F1"/>
+                                            <Button Content="🎙️ Voix Dynamique" Style="{StaticResource ActionButton}" Margin="0,0,6,0" Padding="8,4" Click="BtnPresetBroadcast_Click"/>
                                             <Button Content="🎮 Discord Clear" Style="{StaticResource ActionButton}" Margin="0,0,6,0" Padding="8,4" Click="BtnPresetDiscord_Click"/>
                                             <Button Content="📻 Podcast Chaud" Style="{StaticResource ActionButton}" Margin="0,0,6,0" Padding="8,4" Click="BtnPresetPodcast_Click"/>
                                             <Button Content="⚡ Brut (Bypass)" Style="{StaticResource ActionButton}" Padding="8,4" Click="BtnPresetBypass_Click"/>
@@ -1236,14 +1236,14 @@
                         <ScrollViewer VerticalScrollBarVisibility="Auto">
                             <StackPanel Margin="0,10,0,0" MaxWidth="820" HorizontalAlignment="Center">
                                 <TextBlock Text="Options du Système &amp; Démarrage" FontSize="15" FontWeight="Bold" Foreground="#E2E8F0" Margin="0,0,0,4"/>
-                                <TextBlock Text="Configurez le comportement de SonarGG pour remplacer totalement SteelSeries GG." Foreground="#94A3B8" Margin="0,0,0,16"/>
+                                <TextBlock Text="Configurez le comportement et l'optimisation des performances de SonarGG." Foreground="#94A3B8" Margin="0,0,0,16"/>
 
                                 <!-- Startup & Tray Options -->
                                 <Border Background="#141824" BorderBrush="#212839" BorderThickness="1" CornerRadius="14" Padding="20" Margin="0,0,0,14" Effect="{StaticResource CardShadow}">
                                     <StackPanel>
                                         <CheckBox x:Name="ChkAutoStart" Content="Démarrer SonarGG automatiquement au démarrage de Windows" FontSize="13" FontWeight="SemiBold" Foreground="#F8FAFC" Margin="0,0,0,14" Checked="ChkAutoStart_Checked" Unchecked="ChkAutoStart_Unchecked"/>
                                         <CheckBox x:Name="ChkMinimizeToTray" Content="Réduire dans la zone de notification (System Tray) au lieu de quitter" FontSize="13" FontWeight="SemiBold" Foreground="#F8FAFC" Margin="0,0,0,14" IsChecked="True"/>
-                                        <CheckBox x:Name="ChkAutoPurgeGG" Content="Fermer automatiquement les processus SteelSeries d'origine au lancement" FontSize="13" FontWeight="SemiBold" Foreground="#F8FAFC" IsChecked="True"/>
+                                        <CheckBox x:Name="ChkAutoPurgeGG" Content="Fermer automatiquement les processus résiduels en arrière-plan" FontSize="13" FontWeight="SemiBold" Foreground="#F8FAFC" IsChecked="True"/>
                                     </StackPanel>
                                 </Border>
 
@@ -1297,7 +1297,7 @@
                                         <TextBlock Text="Métriques de Performance" FontSize="14" FontWeight="Bold" Foreground="#10B981" Margin="0,0,0,12"/>
                                         <Grid Margin="0,0,0,8">
                                             <TextBlock Text="Empreinte Mémoire RAM :" Foreground="#94A3B8"/>
-                                            <TextBlock Text="~24 Mo (contre ~850 Mo pour SteelSeries GG)" HorizontalAlignment="Right" FontWeight="Bold" Foreground="#10B981"/>
+                                            <TextBlock Text="~24 Mo (Empreinte mémoire ultra-légère)" HorizontalAlignment="Right" FontWeight="Bold" Foreground="#10B981"/>
                                         </Grid>
                                         <Grid Margin="0,0,0,8">
                                             <TextBlock Text="Consommation CPU :" Foreground="#94A3B8"/>

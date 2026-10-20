@@ -48,7 +48,7 @@
   - 🎯 **Valorant Pro**
   - 🪖 **Warzone / CoD Tactical**
   - 🎵 **Deep Bass Boost**
-  - 💬 **Broadcast Vocal Clarity**
+  - 💬 **Studio Vocal Clarity**
 
 ### 🎙️ Studio Microphone Engine & VST3 Rack
 - **Ultra-low latency (< 0.5 ms) DSP vocal chain**:

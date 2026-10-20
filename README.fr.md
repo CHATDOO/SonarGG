@@ -48,7 +48,7 @@
   - 🎯 **Valorant Pro**
   - 🪖 **Warzone / CoD Tactique**
   - 🎵 **Deep Bass Boost**
-  - 💬 **Clarté Vocale Broadcast**
+  - 💬 **Clarté Vocale Studio**
 
 ### 🎙️ Traitement Micro DSP & Rack VST3
 - **Chaîne vocale ultra-faible latence (< 0.5 ms)** :
