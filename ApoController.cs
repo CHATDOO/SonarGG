@@ -47,12 +47,24 @@ public class ApoController : IDisposable
     {
         try
         {
-            SetDllDirectory(@"C:\Program Files\SteelSeries\GG\apps\sonar");
+            string baseDir = AppDomain.CurrentDomain.BaseDirectory;
+            string localApoDir = Path.Combine(baseDir, "drivers", "apoDriverPackage");
+            string localApoDll = Path.Combine(localApoDir, "Sonar.APOAPI.dll");
 
-            string apoApiDll = @"C:\Program Files\SteelSeries\GG\apps\sonar\Sonar.APOAPI.dll";
-            if (!File.Exists(apoApiDll))
+            string apoApiDll;
+            if (File.Exists(localApoDll))
             {
-                apoApiDll = @"C:\Program Files\SteelSeries\GG\apps\sonar\driver\apoDriverPackage\Sonar.APOAPI.dll";
+                SetDllDirectory(localApoDir);
+                apoApiDll = localApoDll;
+            }
+            else
+            {
+                SetDllDirectory(@"C:\Program Files\SteelSeries\GG\apps\sonar");
+                apoApiDll = @"C:\Program Files\SteelSeries\GG\apps\sonar\Sonar.APOAPI.dll";
+                if (!File.Exists(apoApiDll))
+                {
+                    apoApiDll = @"C:\Program Files\SteelSeries\GG\apps\sonar\driver\apoDriverPackage\Sonar.APOAPI.dll";
+                }
             }
 
             _hApoModule = LoadLibrary(apoApiDll);
@@ -85,6 +97,12 @@ public class ApoController : IDisposable
             }
 
             IsInitialized = _channelStores.Count > 0;
+            if (IsInitialized)
+            {
+                // Désactivation forcée et définitive de toute l'IA ClearCast / DirectML
+                SetClearCastAi(false, 0f);
+                SetImpactNoise(false, 0f);
+            }
             return IsInitialized;
         }
         catch (Exception ex)

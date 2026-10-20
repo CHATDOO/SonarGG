@@ -27,3 +27,6 @@ ehthumbs.db
 Desktop.ini
 $RECYCLE.BIN/
 .DS_Store
+
+## Local Drivers backup
+drivers/

@@ -829,8 +829,9 @@ public partial class MainWindow : Window
             MiniSliderChatMix.Value = chatMix;
             UpdateChatMixLabels(chatMix);
 
-            // Désactivation forcée de l'IA ClearCast (Zero AI, 100% DSP/VST)
+            // Désactivation forcée de l'IA ClearCast & Impact Noise (Zero AI, 100% DSP/VST)
             _apo.SetClearCastAi(false, 0f);
+            _apo.SetImpactNoise(false, 0f);
 
             // Porte Anti-Bruit & Compresseur Hardware
             _apo.GetNoiseGate(out bool ngOn, out float ngThresh);
