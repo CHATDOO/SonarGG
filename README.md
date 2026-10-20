@@ -1,92 +1,120 @@
 # SonarGG ⚡
 
-> **Table de Mixage Virtuelle Haute Performance & Suite de Routage Audio pour Windows**  
-> *High-Performance Virtual Audio Mixer & Audio Routing Suite for Windows*
+> **High-Performance Virtual Audio Mixer, Per-App Routing & DSP Suite for Windows**  
+> *Low-latency, native C# audio engine designed for gamers, streamers, and audio enthusiasts.*
 
+[![Release](https://img.shields.io/github/v/release/CHATDOO/SonarGG?color=00c853&label=Latest%20Release)](https://github.com/CHATDOO/SonarGG/releases/latest)
 [![.NET 8.0](https://img.shields.io/badge/.NET-8.0-blue.svg)](https://dotnet.microsoft.com/)
-[![Platform](https://img.shields.io/badge/Platform-Windows%2010%20%2F%2011-0078D6.svg)](https://www.microsoft.com/windows)
-[![Architecture](https://img.shields.io/badge/Arch-x64-orange.svg)]()
+[![Platform](https://img.shields.io/badge/Platform-Windows%2010%20%2F%2011%20x64-0078D6.svg)](https://www.microsoft.com/windows)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
+[🇫🇷 Lire en Français](README.fr.md)
+
 ---
 
-## 🌟 Fonctionnalités Principales / Key Features
+## 🌟 Overview
 
-### 🎚️ Table de Mixage 5 Canaux (Virtual Mixer)
-- **Canaux Virtuels Dédiés** :
-  - 🎮 **Jeu (Gaming)**
-  - 💬 **Chat Vocal (Voice Chat)**
-  - 🎵 **Média & Musique (Media)**
-  - 🎧 **Auxiliaire (Auxiliary)**
-  - 🎙️ **Microphone (Capture)**
-- Faders verticaux haute précision avec VU-Mètres balistiques en temps réel (60 FPS).
-- Mute instantané avec raccourcis clavier globaux.
+**SonarGG** is a lightweight, standalone virtual audio mixer and routing manager for Windows. It provides full control over your audio streams with real-time hardware ChatMix, per-application routing, custom parametric EQ, low-latency microphone processing with VST3 hosting, and a compact Mini Mode with Always-on-Top overlay.
 
-### 📦 Routage d'Applications & Multi-Sources (App Routing)
-- Détection automatique de toutes les applications en cours d'exécution émettant du son (Discord, Spotify, Steam, Chrome, Jeux...).
-- **Routage en 1 clic** : Basculez n'importe quelle application vers le canal désiré grâce aux boutons segmentés rétro-éclairés.
-- **Glisser-Déposer (Drag & Drop)** : Glissez vos applications directement dans les colonnes de mixage.
-- Défilement horizontal fluide avec la molette de la souris ou les touches rapides `[ ◀ ]` `[ ▶ ]`.
-- Contrôle individuel du volume et mute par application.
+---
 
-### ⚖️ ChatMix
-- Molette d'équilibrage matériel en temps réel entre le son de votre jeu et Discord.
-- Raccourci de réinitialisation rapide à 50/50.
+## 🚀 Key Features
 
-### 🎛️ Égaliseur Paramétrique 10 Bandes
-- Courbe de réponse en fréquence interactive temps réel avec affichage de grille dB.
-- Profils prédéfinis optimisés pour le gaming compétitif :
-  - 🎯 **CS2 / Footsteps Boost** (Bruits de pas amplifiés)
+### 🎚️ 5-Channel Virtual Mixing Console
+- **Dedicated Virtual Channels**:
+  - 🎮 **Gaming** (`Sonar - Gaming`)
+  - 💬 **Voice Chat** (`Sonar - Chat`)
+  - 🎵 **Media / Music** (`Sonar - Media`)
+  - 🎧 **Auxiliary** (`Sonar - Aux`)
+  - 🎙️ **Microphone** (`Sonar - Mic`)
+- High-precision vertical faders with real-time 60 FPS ballistic VU-meters.
+- Instant mute controls with global hotkeys.
+
+### 📦 Application Audio Routing & Multi-Source Assignment
+- **Automatic Audio Session Detection**: Detects any active software playing audio (Discord, Spotify, Steam games, Chrome, OBS, etc.).
+- **1-Click Channel Routing**: Assign apps instantly between Game, Chat, Media, and Aux with segmented controls.
+- **Drag & Drop**: Drag applications directly into mixer columns.
+- **Smooth Horizontal Navigation**: Scroll effortlessly through your apps using the mouse wheel or fast arrow buttons `[ ◀ ]` `[ ▶ ]`.
+- Individual volume faders and mute buttons per application.
+
+### ⚖️ Real-Time ChatMix Balance
+- Dynamic hardware/software blend between your game audio and voice communications (e.g., Discord).
+- Instant 50/50 balance reset button and global shortcut.
+
+### 🎛️ 10-Band Parametric Equalizer
+- Interactive real-time frequency curve visualizer with calibrated dB grid.
+- Tailored gaming and audio presets:
+  - 🎯 **CS2 / Footsteps Boost** (Optimized for footsteps and positional cues)
   - 🎯 **Valorant Pro**
-  - 🪖 **Call of Duty / Warzone**
+  - 🪖 **Warzone / CoD Tactical**
   - 🎵 **Deep Bass Boost**
-  - 💬 **Clarté de Voix Podcast**
+  - 💬 **Broadcast Vocal Clarity**
 
-### 🎙️ Studio Micro & Rack VST3
-- Chaîne vocale en temps réel avec latence ultra-faible (< 0.5 ms) :
-  - **Porte anti-bruit (Noise Gate)** réglable pour éliminer les bruits de fond et claviers mécaniques.
-  - **Compresseur vocal studio** pour équilibrer la dynamique de votre voix.
-  - **Filtre coupe-bas 80 Hz** anti-pop et anti-résonances de bureau.
-  - **Sidetone** (écoute locale directe du micro dans votre casque sans latence).
-- **Hôte de Plugins VST3** : Chargez vos effets et égaliseurs externes préférés directement dans votre chaîne vocale.
+### 🎙️ Studio Microphone Engine & VST3 Rack
+- **Ultra-low latency (< 0.5 ms) DSP vocal chain**:
+  - **Noise Gate**: Dynamic threshold to eliminate mechanical keyboards and ambient background noise.
+  - **Studio Vocal Compressor**: Levels out peaks and whispers for consistent streaming/chat volume.
+  - **80 Hz High-Pass Filter**: Cuts desk rumbles, vibrations, and plosive pops.
+  - **Zero-Latency Sidetone**: Direct local mic monitoring into your headset.
+- **VST3 Plugin Hosting**: Load your favorite external audio plugins, EQs, or compressors directly into the microphone signal chain.
 
-### 🌐 Spatial Audio 7.1
-- Virtualisation sonore 7.1 Surround pour une spatialisation immersive dans les jeux compétitifs et le multimédia.
+### 🌐 7.1 Virtual Spatial Audio
+- Immersive 360-degree virtual surround sound simulation optimized for competitive gaming headsets.
 
-### 📱 Mode Mini Compact (Mini Mode)
-- Interface compacte épurée affichant l'essentiel : les 5 faders, mutes et ChatMix.
-- Option **Always-on-Top** (Épingler au premier plan) par-dessus vos jeux en mode fenêtré sans bordure.
-- Raccourci rapide `Ctrl + M` pour basculer instantanément entre vue complète et vue mini.
+### 📱 Compact Mini Mode & Always-on-Top Overlay
+- Ultra-compact floating HUD displaying only the essentials: the 5 faders, mutes, and ChatMix wheel.
+- **Always-on-Top**: Pin the mixer over borderless windowed games or stream setups.
+- Quick toggle hotkey: `Ctrl + M`.
 
-### ⌨️ Raccourcis Clavier Personnalisables (Global Hotkeys)
-- Tous les raccourcis sont 100% éditables d'un clic dans l'onglet **Raccourcis**.
-- Fonctionnent en jeu plein écran et en arrière-plan.
+### ⌨️ Fully Customizable Global Hotkeys
+- Customize and bind all shortcuts directly from the **Hotkeys** tab.
+- Operates globally, even when games are running full screen.
 
-### 🌐 Bilingue Français / Anglais
-- Basculement instantané de la langue dans toute l'interface via le bouton `🌐 FR / EN`.
+### 🌍 Bilingual Interface (English / French)
+- Instant 1-click language switching across the entire UI via the `🌐 FR / EN` toggle.
+
+### 🔄 In-App Auto-Updater
+- Checks GitHub Releases on launch or manually from the **Settings** tab.
+- In-place download, progress indicator, and self-updating restart mechanism.
 
 ---
 
-## 🚀 Installation & Compilation
+## 📥 Download & Installation
 
-### Prérequis
-- **Windows 10 ou Windows 11 (64-bit)**
-- **[.NET 8.0 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)** (pour compiler) ou **.NET 8.0 Desktop Runtime** (pour exécuter)
+### Option 1: Pre-built Executable (Recommended)
+1. Download the latest `SonarGG.exe` or `SonarGG-Windows-x64.zip` from [Releases](https://github.com/CHATDOO/SonarGG/releases/latest).
+2. Run `SonarGG.exe`. No installation required.
 
-### Compilation depuis les sources
+### Option 2: Build from Source
+
+#### Prerequisites
+- **Windows 10 / 11 (64-bit)**
+- **[.NET 8.0 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)**
+
+#### Building
 ```powershell
-# Cloner le dépôt
-git clone https://github.com/votre-compte/SonarGG.git
+# Clone the repository
+git clone https://github.com/CHATDOO/SonarGG.git
 cd SonarGG
 
-# Restaurer les dépendances et compiler en mode Release
+# Restore dependencies and build
 dotnet build -c Release
 ```
 
-L'exécutable autonome se trouvera dans :
+The compiled binary will be located at:
 `bin/Release/net8.0-windows/SonarGG.exe`
 
 ---
 
-## 📄 Licence
-Ce projet est sous licence [MIT](LICENSE).
+## 🛠️ Tech Stack & Architecture
+
+- **Language / Runtime**: C# 12 / .NET 8 WPF (Windows Presentation Foundation)
+- **Audio Routing**: Windows Core Audio API (WASAPI) via `NAudio`
+- **Low-Latency Processing**: Double-buffered floating-point DSP pipeline
+- **Configuration**: Local SQLite database (`Microsoft.Data.Sqlite`)
+
+---
+
+## 📄 License
+
+This project is licensed under the [MIT License](LICENSE).
