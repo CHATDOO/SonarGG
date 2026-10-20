@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Reflection;
@@ -32,7 +33,7 @@ public static class UpdateService
 
     private static readonly HttpClient _httpClient = new()
     {
-        Timeout = TimeSpan.FromSeconds(15)
+        Timeout = TimeSpan.FromSeconds(25)
     };
 
     static UpdateService()
@@ -78,23 +79,30 @@ public static class UpdateService
                 }
             }
 
-            string downloadUrl = "";
+            string exeUrl = "";
+            string zipUrl = "";
             if (root.TryGetProperty("assets", out var assets) && assets.ValueKind == JsonValueKind.Array)
             {
                 foreach (var asset in assets.EnumerateArray())
                 {
                     string aName = asset.TryGetProperty("name", out var aNameProp) ? aNameProp.GetString() ?? "" : "";
-                    if (aName.EndsWith(".exe", StringComparison.OrdinalIgnoreCase) ||
-                        aName.EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
+                    if (asset.TryGetProperty("browser_download_url", out var dlProp))
                     {
-                        if (asset.TryGetProperty("browser_download_url", out var dlProp))
+                        string dl = dlProp.GetString() ?? "";
+                        if (aName.EndsWith(".exe", StringComparison.OrdinalIgnoreCase))
                         {
-                            downloadUrl = dlProp.GetString() ?? "";
+                            exeUrl = dl;
                             break;
+                        }
+                        else if (aName.EndsWith(".zip", StringComparison.OrdinalIgnoreCase) && string.IsNullOrEmpty(zipUrl))
+                        {
+                            zipUrl = dl;
                         }
                     }
                 }
             }
+
+            string downloadUrl = !string.IsNullOrEmpty(exeUrl) ? exeUrl : zipUrl;
 
             if (remoteVersion > CurrentVersion)
             {
@@ -119,14 +127,21 @@ public static class UpdateService
 
     /// <summary>
     /// Télécharge la mise à jour et applique le remplacement automatique.
+    /// Supporte à la fois les exécutables directs (.exe) et les archives (.zip).
     /// </summary>
     public static async Task<bool> DownloadAndApplyUpdateAsync(string downloadUrl, IProgress<int>? progress = null)
     {
         try
         {
             string tempDir = Path.Combine(Path.GetTempPath(), "SonarGG_Update");
+            if (Directory.Exists(tempDir))
+            {
+                try { Directory.Delete(tempDir, true); } catch { }
+            }
             Directory.CreateDirectory(tempDir);
-            string tempExe = Path.Combine(tempDir, "SonarGG_new.exe");
+
+            bool isZip = downloadUrl.EndsWith(".zip", StringComparison.OrdinalIgnoreCase);
+            string downloadedFile = Path.Combine(tempDir, isZip ? "update.zip" : "SonarGG_new.exe");
 
             using (var response = await _httpClient.GetAsync(downloadUrl, HttpCompletionOption.ResponseHeadersRead))
             {
@@ -134,7 +149,7 @@ public static class UpdateService
                 long totalBytes = response.Content.Headers.ContentLength ?? -1L;
 
                 using var stream = await response.Content.ReadAsStreamAsync();
-                using var fs = new FileStream(tempExe, FileMode.Create, FileAccess.Write, FileShare.None);
+                using var fs = new FileStream(downloadedFile, FileMode.Create, FileAccess.Write, FileShare.None);
 
                 var buffer = new byte[81920];
                 long readTotal = 0;
@@ -148,6 +163,31 @@ public static class UpdateService
                         int pct = (int)((readTotal * 100) / totalBytes);
                         progress.Report(pct);
                     }
+                }
+            }
+
+            string finalExePath = downloadedFile;
+
+            // Si c'est un zip, extraire l'archive et localiser SonarGG.exe
+            if (isZip)
+            {
+                string extractDir = Path.Combine(tempDir, "extracted");
+                Directory.CreateDirectory(extractDir);
+                ZipFile.ExtractToDirectory(downloadedFile, extractDir);
+
+                string[] foundExes = Directory.GetFiles(extractDir, "SonarGG.exe", SearchOption.AllDirectories);
+                if (foundExes.Length > 0)
+                {
+                    finalExePath = foundExes[0];
+                }
+                else
+                {
+                    // Fallback: chercher n'importe quel .exe
+                    string[] anyExes = Directory.GetFiles(extractDir, "*.exe", SearchOption.AllDirectories);
+                    if (anyExes.Length > 0)
+                        finalExePath = anyExes[0];
+                    else
+                        return false;
                 }
             }
 
@@ -165,9 +205,9 @@ public static class UpdateService
 timeout /t 1 /nobreak >nul
 taskkill /f /pid {pid} >nul 2>&1
 timeout /t 1 /nobreak >nul
-copy /y ""{tempExe}"" ""{currentExe}"" >nul
+copy /y ""{finalExePath}"" ""{currentExe}"" >nul
 start """" ""{currentExe}""
-del /f /q ""{tempExe}"" >nul 2>&1
+del /f /q ""{finalExePath}"" >nul 2>&1
 (goto) 2>nul & del ""%~f0""
 ";
             await File.WriteAllTextAsync(batchScript, scriptContent);
