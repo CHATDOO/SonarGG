@@ -202,6 +202,9 @@ public partial class MainWindow : Window
             _appScanTimer.Interval = TimeSpan.FromSeconds(3);
             _appScanTimer.Tick += (s, ev) => RefreshAppsList();
             _appScanTimer.Start();
+
+            // Vérification automatique des mises à jour GitHub en arrière-plan
+            Task.Run(CheckUpdatesSilently);
         }
         catch (Exception ex)
         {
@@ -1841,6 +1844,10 @@ public partial class MainWindow : Window
         if (TxtHkVolDownTitle != null) TxtHkVolDownTitle.Text = LocalizationService.Get("HkVolDown");
         if (TxtHkClickHelp != null) TxtHkClickHelp.Text = LocalizationService.Get("HkClickToEdit");
         if (BtnResetHotkeys != null) BtnResetHotkeys.Content = LocalizationService.Get("BtnResetHotkeys");
+        if (TxtSettingsUpdateTitle != null) TxtSettingsUpdateTitle.Text = LocalizationService.Get("SettingsUpdateTitle");
+        if (BtnCheckUpdates != null) BtnCheckUpdates.Content = LocalizationService.Get("BtnCheckUpdates");
+        if (BtnInstallUpdate != null) BtnInstallUpdate.Content = LocalizationService.Get("BtnInstallUpdate");
+        if (TxtAppVersion != null) TxtAppVersion.Text = $"v{UpdateService.CurrentVersion}";
 
         // Refresh Mute buttons text
         if (BtnMuteGame != null) UpdateMuteButton(BtnMuteGame, _apo.GetMute("Game"));
@@ -2386,4 +2393,96 @@ private void OnHotkeyPressed(SonarHotkeyAction action)
         };
         panel.Children.Add(tb);
     }
+
+    // =====================================================================
+    // GITHUB AUTO-UPDATE SYSTEM
+    // =====================================================================
+    private UpdateInfo? _latestUpdate;
+
+    private async void CheckUpdatesSilently()
+    {
+        try
+        {
+            var update = await UpdateService.CheckForUpdatesAsync();
+            if (update != null)
+            {
+                _latestUpdate = update;
+                Dispatcher.Invoke(() => ShowUpdateBanner(update));
+            }
+        }
+        catch { }
+    }
+
+    private async void BtnCheckUpdates_Click(object sender, RoutedEventArgs e)
+    {
+        BtnCheckUpdates.IsEnabled = false;
+        TxtUpdateStatus.Text = LocalizationService.Get("CheckingUpdates");
+
+        try
+        {
+            var update = await UpdateService.CheckForUpdatesAsync();
+            if (update != null)
+            {
+                _latestUpdate = update;
+                ShowUpdateBanner(update);
+            }
+            else
+            {
+                BorderUpdateAction.Visibility = Visibility.Collapsed;
+                TxtUpdateStatus.Text = LocalizationService.Get("NoUpdateAvailable");
+            }
+        }
+        catch (Exception ex)
+        {
+            TxtUpdateStatus.Text = "Erreur: " + ex.Message;
+        }
+        finally
+        {
+            BtnCheckUpdates.IsEnabled = true;
+        }
+    }
+
+    private void ShowUpdateBanner(UpdateInfo update)
+    {
+        TxtUpdateStatus.Text = LocalizationService.Get("UpdateAvailable");
+        TxtUpdateAvailableTitle.Text = $"🎉 SonarGG {update.TagName} ({update.Title})";
+        TxtUpdateChangelog.Text = !string.IsNullOrWhiteSpace(update.Changelog)
+            ? update.Changelog.Replace("\r", "").Split('\n')[0]
+            : "Cliquez sur installer pour télécharger et mettre à jour automatiquement.";
+        BorderUpdateAction.Visibility = Visibility.Visible;
+    }
+
+    private async void BtnInstallUpdate_Click(object sender, RoutedEventArgs e)
+    {
+        if (_latestUpdate == null) return;
+
+        if (!_latestUpdate.HasAsset)
+        {
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+            {
+                FileName = _latestUpdate.HtmlUrl,
+                UseShellExecute = true
+            });
+            return;
+        }
+
+        BtnInstallUpdate.IsEnabled = false;
+        ProgressDownload.Visibility = Visibility.Visible;
+        ProgressDownload.Value = 0;
+
+        var progress = new Progress<int>(pct =>
+        {
+            ProgressDownload.Value = pct;
+            TxtUpdateStatus.Text = string.Format(LocalizationService.Get("DownloadingUpdate"), pct);
+        });
+
+        bool success = await UpdateService.DownloadAndApplyUpdateAsync(_latestUpdate.DownloadUrl, progress);
+        if (!success)
+        {
+            BtnInstallUpdate.IsEnabled = true;
+            ProgressDownload.Visibility = Visibility.Collapsed;
+            TxtUpdateStatus.Text = LocalizationService.Get("UpdateDownloadError");
+        }
+    }
+
 }

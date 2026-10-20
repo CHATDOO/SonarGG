@@ -119,6 +119,14 @@ public static class LocalizationService
         ["MinimizeTray"] = ("Réduire dans la zone de notification (System Tray)", "Minimize to System Tray"),
         ["AutoPurge"] = ("Purger automatiquement SteelSeries GG au démarrage", "Auto-purge SteelSeries GG on startup"),
         ["LanguageLabel"] = ("Langue de l'interface (Language) :", "Interface Language:"),
+        ["SettingsUpdateTitle"] = ("🚀 Mises à Jour & Version", "🚀 Updates & Version"),
+        ["BtnCheckUpdates"] = ("🔄 Vérifier les Mises à Jour", "🔄 Check for Updates"),
+        ["CheckingUpdates"] = ("Vérification des mises à jour sur GitHub...", "Checking for updates on GitHub..."),
+        ["NoUpdateAvailable"] = ("Vous utilisez la version la plus récente de SonarGG.", "You are using the latest version of SonarGG."),
+        ["UpdateAvailable"] = ("🎉 Nouvelle version disponible !", "🎉 New version available!"),
+        ["BtnInstallUpdate"] = ("⚡ Télécharger & Mettre à jour", "⚡ Download & Install Update"),
+        ["DownloadingUpdate"] = ("Téléchargement de la mise à jour... {0}%", "Downloading update... {0}%"),
+        ["UpdateDownloadError"] = ("Erreur lors du téléchargement. Veuillez réessayer.", "Error downloading update. Please retry."),
 
         // Mini Mode
         ["MiniTitle"] = ("SonarGG Mini", "SonarGG Mini"),
